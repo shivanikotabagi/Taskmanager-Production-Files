@@ -1,0 +1,13 @@
+apiVersion: 1
+
+# Dashboard provisioning configuration
+providers:
+  - name: 'TaskManager Dashboards'
+    orgId: 1
+    folder: 'TaskManager'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
