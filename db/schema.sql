@@ -1,21 +1,14 @@
 -- ============================================================
 -- TaskFlow — MySQL Schema
 -- ============================================================
--- Run: mysql -u root -p < db/schema.sql
--- NOTE: The default admin (admin / Admin@123) is created
---       automatically by DataInitializer.java on first boot.
+-- This file is auto-executed by the MySQL container on FIRST
+-- boot only (via /docker-entrypoint-initdb.d/).
+
+-- Default admin (admin / Admin@123) is seeded by
+-- DataInitializer.java on first Spring Boot startup.
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE}
-  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}'
-
-GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';
-FLUSH PRIVILEGES;
-
-
-USE ${MYSQL_DATABASE};
+USE taskmanager;
 
 -- ── Users ──────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS users (
@@ -79,6 +72,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     FOREIGN KEY (created_by)  REFERENCES users(id)
 );
 
+-- ── Task History ───────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS task_history (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     task_id     BIGINT,
@@ -91,7 +85,6 @@ CREATE TABLE IF NOT EXISTS task_history (
     changed_at  DATETIME(6),
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
 );
-
 
 -- ── Notifications ──────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS notifications (
@@ -134,16 +127,16 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 );
 
 -- ── Indexes ────────────────────────────────────────────────────
-CREATE INDEX IF NOT EXISTS idx_tasks_project        ON tasks(project_id);
-CREATE INDEX IF NOT EXISTS idx_tasks_assigned       ON tasks(assigned_to);
-CREATE INDEX IF NOT EXISTS idx_tasks_status         ON tasks(status);
-CREATE INDEX IF NOT EXISTS idx_task_history_task ON task_history(task_id);
-CREATE INDEX IF NOT EXISTS idx_notif_user           ON notifications(user_id);
-CREATE INDEX IF NOT EXISTS idx_notif_read           ON notifications(user_id, is_read);
-CREATE INDEX IF NOT EXISTS idx_audit_entity         ON audit_logs(entity_type, entity_id);
-CREATE INDEX IF NOT EXISTS idx_audit_performer      ON audit_logs(performed_by);
-CREATE INDEX IF NOT EXISTS idx_audit_created        ON audit_logs(created_at);
-CREATE INDEX IF NOT EXISTS idx_pm_project           ON project_members(project_id);
-CREATE INDEX IF NOT EXISTS idx_pm_user              ON project_members(user_id);
-CREATE INDEX IF NOT EXISTS idx_projects_manager     ON projects(manager_id);
-CREATE INDEX IF NOT EXISTS idx_projects_status      ON projects(status);
+CREATE INDEX IF NOT EXISTS idx_tasks_project    ON tasks(project_id);
+CREATE INDEX IF NOT EXISTS idx_tasks_assigned   ON tasks(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_tasks_status     ON tasks(status);
+CREATE INDEX IF NOT EXISTS idx_task_history     ON task_history(task_id);
+CREATE INDEX IF NOT EXISTS idx_notif_user       ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notif_read       ON notifications(user_id, is_read);
+CREATE INDEX IF NOT EXISTS idx_audit_entity     ON audit_logs(entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS idx_audit_performer  ON audit_logs(performed_by);
+CREATE INDEX IF NOT EXISTS idx_audit_created    ON audit_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_pm_project       ON project_members(project_id);
+CREATE INDEX IF NOT EXISTS idx_pm_user          ON project_members(user_id);
+CREATE INDEX IF NOT EXISTS idx_projects_manager ON projects(manager_id);
+CREATE INDEX IF NOT EXISTS idx_projects_status  ON projects(status);

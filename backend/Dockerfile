@@ -1,19 +1,21 @@
-# ── Stage 1: Build ───────────────────────────────────────────────────────────
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+# ── Stage 1: Build ────────────────────────────────────────────
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
+
+# Copy pom first for layer caching
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
-COPY src ./src
-RUN mvn clean package -DskipTests -B
 
-# ── Stage 2: Run ─────────────────────────────────────────────────────────────
+# Copy source and build
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# ── Stage 2: Run ──────────────────────────────────────────────
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-COPY --from=builder /app/target/*.jar app.jar
-USER appuser
+
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
-ENTRYPOINT ["java", \
-  "-XX:+UseContainerSupport", \
-  "-XX:MaxRAMPercentage=75.0", \
-  "-jar", "app.jar"]
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
