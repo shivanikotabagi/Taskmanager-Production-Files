@@ -5,7 +5,7 @@ import { authAPI, notificationAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
-const WS_URL = process.env.REACT_APP_WS_URL || 'http://localhost:8080/ws';
+const WS_URL = process.env.REACT_APP_WS_URL || 'http://34.226.199.223:8080/ws';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
