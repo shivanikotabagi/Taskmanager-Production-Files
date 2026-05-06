@@ -17,20 +17,20 @@ pipeline {
                     git branch: 'main',
                         url: 'https://github.com/shivanikotabagi/Taskmanager-Production-Files.git'
                 }
-                sh "cp ${ENV_FILE} ${DEPLOY_PATH}/.env"
-                echo ".env copied successfully"
+                sh "cp ${ENV_FILE} ${DEPLOY_PATH}/.env.taskmanager"
+                echo ".env.taskmanager copied successfully"
             }
         }
 
         stage('Verify ENV File') {
             steps {
                 sh """
-                    if [ ! -f ${DEPLOY_PATH}/.env ]; then
-                        echo "ERROR: .env file missing at ${DEPLOY_PATH}/.env"
+                    if [ ! -f ${DEPLOY_PATH}/.env.taskmanager ]; then
+                        echo "ERROR: .env.taskmanager file missing at ${DEPLOY_PATH}/.env.taskmanager"
                         echo "Please create it at /home/ubuntu/.env.taskmanager on the server"
                         exit 1
                     else
-                        echo ".env file found"
+                        echo ".env.taskmanager file found"
                     fi
                 """
             }
@@ -67,8 +67,8 @@ pipeline {
             steps {
                 dir("${DEPLOY_PATH}") {
                     sh """
-                        echo "Stopping old containers..."
-                        sudo docker compose down || true
+                        echo "Stopping old containers and removing volumes..."
+                        sudo docker compose down -v || true
 
                         echo "Building Docker images..."
                         sudo docker compose build --no-cache
@@ -126,8 +126,8 @@ pipeline {
     post {
         success {
             echo "Deployment successful - Build #${BUILD_NUMBER}"
-            echo "Frontend : http://54.198.98.14"
-            echo "Backend  : http://54.198.98.14:8080"
+            echo "Frontend : http://34.226.199.223"
+            echo "Backend  : http://34.226.199.223:8080"
         }
         failure {
             echo "Deployment failed at build #${BUILD_NUMBER}. Check stage logs above."
