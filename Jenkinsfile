@@ -68,19 +68,19 @@ pipeline {
                 dir("${DEPLOY_PATH}") {
                     sh """
                         echo "Stopping old containers and removing volumes..."
-                        sudo docker compose down -v || true
+                        sudo docker compose --env-file .env.taskmanager down -v || true
 
                         echo "Building Docker images..."
-                        sudo docker compose build --no-cache
+                        sudo docker compose --env-file .env.taskmanager build --no-cache
 
                         echo "Starting containers..."
-                        sudo docker compose up -d
+                        sudo docker compose --env-file .env.taskmanager up -d
 
                         echo "Pruning dangling images..."
                         sudo docker image prune -f
 
                         echo "Running containers:"
-                        sudo docker compose ps
+                        sudo docker compose --env-file .env.taskmanager ps
                     """
                 }
             }
@@ -112,12 +112,12 @@ pipeline {
 
                     if [ \$attempt -eq \$max_attempts ]; then
                         echo "ERROR: Backend health check failed"
-                        sudo docker compose -f ${DEPLOY_PATH}/docker-compose.yml logs backend --tail=50
+                        sudo docker compose --env-file ${DEPLOY_PATH}/.env.taskmanager -f ${DEPLOY_PATH}/docker-compose.yml logs backend --tail=50
                         exit 1
                     fi
 
                     echo "Final container status:"
-                    sudo docker compose -f ${DEPLOY_PATH}/docker-compose.yml ps
+                    sudo docker compose --env-file ${DEPLOY_PATH}/.env.taskmanager -f ${DEPLOY_PATH}/docker-compose.yml ps
                 """
             }
         }
@@ -126,8 +126,10 @@ pipeline {
     post {
         success {
             echo "Deployment successful - Build #${BUILD_NUMBER}"
-            echo "Frontend : http://34.226.199.223"
-            echo "Backend  : http://34.226.199.223:8080"
+            echo "Frontend  : http://34.226.199.223"
+            echo "Backend   : http://34.226.199.223:8080"
+            echo "Grafana   : http://34.226.199.223:3001"
+            echo "Prometheus: http://34.226.199.223:9090"
         }
         failure {
             echo "Deployment failed at build #${BUILD_NUMBER}. Check stage logs above."
