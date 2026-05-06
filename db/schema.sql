@@ -137,6 +137,6 @@ CREATE INDEX IF NOT EXISTS idx_audit_entity     ON audit_logs(entity_type, entit
 CREATE INDEX IF NOT EXISTS idx_audit_performer  ON audit_logs(performed_by);
 CREATE INDEX IF NOT EXISTS idx_audit_created    ON audit_logs(created_at);
 CREATE INDEX IF NOT EXISTS idx_pm_project       ON project_members(project_id);
-CREATE INDEX IF NOT EXISTS idx_pm_user          ON project_members(user_id);
+CREATE INDEX idx_pm_user          ON project_members(user_id);
 CREATE INDEX IF NOT EXISTS idx_projects_manager ON projects(manager_id);
 CREATE INDEX IF NOT EXISTS idx_projects_status  ON projects(status);
