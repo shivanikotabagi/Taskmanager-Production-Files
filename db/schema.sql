@@ -127,16 +127,16 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 );
 
 -- ── Indexes ────────────────────────────────────────────────────
-CREATE INDEX IF NOT EXISTS idx_tasks_project    ON tasks(project_id);
-CREATE INDEX IF NOT EXISTS idx_tasks_assigned   ON tasks(assigned_to);
-CREATE INDEX IF NOT EXISTS idx_tasks_status     ON tasks(status);
-CREATE INDEX IF NOT EXISTS idx_task_history     ON task_history(task_id);
-CREATE INDEX IF NOT EXISTS idx_notif_user       ON notifications(user_id);
-CREATE INDEX IF NOT EXISTS idx_notif_read       ON notifications(user_id, is_read);
-CREATE INDEX IF NOT EXISTS idx_audit_entity     ON audit_logs(entity_type, entity_id);
-CREATE INDEX IF NOT EXISTS idx_audit_performer  ON audit_logs(performed_by);
-CREATE INDEX IF NOT EXISTS idx_audit_created    ON audit_logs(created_at);
-CREATE INDEX IF NOT EXISTS idx_pm_project       ON project_members(project_id);
+CREATE INDEX idx_tasks_project    ON tasks(project_id);
+CREATE INDEX idx_tasks_assigned   ON tasks(assigned_to);
+CREATE INDEX idx_tasks_status     ON tasks(status);
+CREATE INDEX idx_task_history     ON task_history(task_id);
+CREATE INDEX idx_notif_user       ON notifications(user_id);
+CREATE INDEX idx_notif_read       ON notifications(user_id, is_read);
+CREATE INDEX idx_audit_entity     ON audit_logs(entity_type, entity_id);
+CREATE INDEX idx_audit_performer  ON audit_logs(performed_by);
+CREATE INDEX idx_audit_created    ON audit_logs(created_at);
+CREATE INDEX idx_pm_project       ON project_members(project_id);
 CREATE INDEX idx_pm_user          ON project_members(user_id);
-CREATE INDEX IF NOT EXISTS idx_projects_manager ON projects(manager_id);
-CREATE INDEX IF NOT EXISTS idx_projects_status  ON projects(status);
+CREATE INDEX idx_projects_manager ON projects(manager_id);
+CREATE INDEX idx_projects_status  ON projects(status);
