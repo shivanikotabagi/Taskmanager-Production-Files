@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://34.226.199.223:8080';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://taskmanager-backend:8080';
 
 const api = axios.create({
   baseURL: `${API_BASE}/api`,
