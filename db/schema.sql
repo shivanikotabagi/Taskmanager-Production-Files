@@ -8,7 +8,7 @@
 -- DataInitializer.java on first Spring Boot startup.
 -- ============================================================
 
-USE taskmanager;
+USE taskmanager_db;
 
 -- ── Users ──────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS users (
