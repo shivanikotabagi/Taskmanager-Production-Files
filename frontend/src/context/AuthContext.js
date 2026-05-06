@@ -5,7 +5,7 @@ import { authAPI, notificationAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
-const WS_URL = process.env.REACT_APP_WS_URL || 'http://''/ws';
+const WS_URL = process.env.REACT_APP_WS_URL || '''/ws';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
