@@ -79,8 +79,8 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
-      GF_SERVER_ROOT_URL: http://${HOST_IP}/grafana/
-      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      GF_SERVER_ROOT_URL: http://${HOST_IP}:${GRAFANA_PORT}
+      GF_SERVER_SERVE_FROM_SUB_PATH: "false"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
