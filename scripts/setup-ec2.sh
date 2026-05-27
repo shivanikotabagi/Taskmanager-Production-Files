@@ -78,20 +78,26 @@ chmod 750 "$DEPLOY_PATH"
 chmod 700 "$DEPLOY_PATH/mysql-data"
 chmod 700 "$DEPLOY_PATH/.env"
 
-# Create a systemd service to auto-start the containers
+# Copy update-ip script to deploy directory
+echo "📋 Installing update-ip script..."
+cp "$(dirname "$0")/update-ip.sh" "$DEPLOY_PATH/update-ip.sh"
+chmod +x "$DEPLOY_PATH/update-ip.sh"
+
+# Create a systemd service that updates the IP on every start before launching containers
 echo "🔧 Creating systemd service..."
 cat > /etc/systemd/system/taskmanager.service << 'EOF'
 [Unit]
 Description=TaskManager Docker Compose Service
 Requires=docker.service
-After=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/opt/taskmanager
-ExecStart=/usr/local/bin/docker-compose -f docker-compose.yml up -d
-ExecStop=/usr/local/bin/docker-compose -f docker-compose.yml down
+ExecStart=/opt/taskmanager/update-ip.sh
+ExecStop=/usr/local/bin/docker-compose -f /opt/taskmanager/docker-compose.yml down
 Restart=on-failure
 RestartSec=5
 
